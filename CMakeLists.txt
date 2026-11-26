@@ -7,4 +7,6 @@ add_executable(Vehicle_imspection main.cpp
         InspectionAppointment.h
         Car.h
         Car.cpp
-        InspectionAppointment.cpp)
+        InspectionAppointment.cpp
+        InspectionItem.cpp
+        InspectionItem.h)
