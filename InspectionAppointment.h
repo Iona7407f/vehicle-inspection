@@ -26,7 +26,7 @@ public:
     bool RecordItemResult(std::size_t index, bool passed);
     bool CompleteInspection();
     bool IssueDocument();
-    std::string GetDocument() const;
+    void PrintDocument() const;
 
 };
 
