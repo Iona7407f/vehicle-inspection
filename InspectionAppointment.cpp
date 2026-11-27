@@ -1,4 +1,5 @@
 #include "InspectionAppointment.h"
+#include "InspectionItem.h"
 
 InspectionAppointment::InspectionAppointment(uint32_t ID_registration, Car vehicle, std::string date_time)
     :ID_registration(ID_registration),vehicle(vehicle),date_time(date_time), appointment_stage(AppointmentStatus::booked)
@@ -60,3 +61,57 @@ bool InspectionAppointment::RecordItemResult(std::size_t index, bool passed)
         return true;
     }
 }
+
+bool InspectionAppointment::CompleteInspection()
+{
+    if (appointment_stage != AppointmentStatus::processing)
+    {
+        return false;
+    }
+    bool has_failures = false;
+    for (std::size_t i = 0; i < inspection_items.size(); i++)
+    {
+        if (inspection_items[i].GetStatus() == TechInspectionStatus::unchecked)
+        {
+            return false;
+        }
+        if (inspection_items[i].GetStatus() == TechInspectionStatus::failed)
+        {
+            has_failures = true;
+        }
+    }
+    if (has_failures == true)
+    {
+        inspection_decision = InspectionDecision::rejected;
+    }else
+    {
+        inspection_decision = InspectionDecision::approved;
+    }
+    appointment_stage = AppointmentStatus::completed;
+    return true;
+}
+
+bool InspectionAppointment::IssueDocument()
+{
+    if (appointment_stage != AppointmentStatus::completed || inspection_decision == InspectionDecision::pending)
+    {
+        return false;
+    }else
+    {
+        appointment_stage = AppointmentStatus::document_issued;
+        return true;
+    }
+}
+
+std::string InspectionAppointment::GetDocument() const
+{
+    if (appointment_stage != AppointmentStatus::completed && appointment_stage != AppointmentStatus::document_issued)
+    {
+        return " ";
+    }
+    else
+    {
+        
+    }
+}
+

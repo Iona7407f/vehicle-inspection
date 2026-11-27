@@ -8,6 +8,8 @@
 
 enum class AppointmentStatus {booked, accepted, cancelled, processing, completed, document_issued };
 
+enum class InspectionDecision {pending, approved, rejected};
+
 class InspectionAppointment {
 private:
     uint32_t ID_registration;
@@ -15,12 +17,16 @@ private:
     std::string date_time;
     AppointmentStatus appointment_stage;
     std::vector<InspectionItem> inspection_items;
+    InspectionDecision inspection_decision = InspectionDecision::pending;
 public:
     InspectionAppointment(uint32_t ID_registration, Car vehicle, std::string date_time);
     bool AcceptVehicle();
     bool CancelAppointment();
     bool StartInspection();
     bool RecordItemResult(std::size_t index, bool passed);
+    bool CompleteInspection();
+    bool IssueDocument();
+    std::string GetDocument() const;
 
 };
 
