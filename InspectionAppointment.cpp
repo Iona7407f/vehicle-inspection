@@ -1,5 +1,7 @@
 #include "InspectionAppointment.h"
 #include "InspectionItem.h"
+#include "Car.h"
+#include <iostream>
 
 InspectionAppointment::InspectionAppointment(uint32_t ID_registration, Car vehicle, std::string date_time)
     :ID_registration(ID_registration),vehicle(vehicle),date_time(date_time), appointment_stage(AppointmentStatus::booked)
@@ -103,15 +105,41 @@ bool InspectionAppointment::IssueDocument()
     }
 }
 
-std::string InspectionAppointment::GetDocument() const
+void InspectionAppointment::PrintDocument() const
 {
-    if (appointment_stage != AppointmentStatus::completed && appointment_stage != AppointmentStatus::document_issued)
+    if (appointment_stage == AppointmentStatus::completed || appointment_stage == AppointmentStatus::document_issued)
     {
-        return " ";
-    }
-    else
+        std::cout << "--------Inspection Document--------" << std::endl;
+        std::cout << "Mark: " << vehicle.GetMark() << std::endl;
+        std::cout << "Model: " << vehicle.GetModel() << std::endl;
+        std::cout << "Registration number: " << vehicle.GetGovNumber() << std::endl;
+        std::cout << "ID: " << ID_registration << std::endl;
+        std::cout << "Date: " << date_time << std::endl;
+        if (inspection_decision == InspectionDecision::approved) {
+            std::cout << "Result: PASSED" << std::endl;
+        }else if (inspection_decision == InspectionDecision::rejected) {
+            std::cout << "Result: FAILED" << std::endl;
+            for (std::size_t i = 0; i < inspection_items.size(); i++) {
+                if (inspection_items[i].GetStatus() == TechInspectionStatus::failed) {
+                    std::cout <<inspection_items[i].GetItemName() << std::endl;
+                }
+            }
+        }
+    }else
     {
-        
+        std::cout << "Document is not available" << std::endl;
     }
 }
 
+std::uint32_t InspectionAppointment::GetID() const
+{
+    return ID_registration;
+}
+
+void InspectionAppointment::PrintSummary() const
+{
+    std::cout << "----Summary Information----" << std::endl;
+    std::cout << "ID appointment: " << ID_registration << std::endl;
+    std::cout << "Registration number: " << vehicle.GetGovNumber() << std::endl;
+    std::cout << "Date and time" << date_time << std::endl;
+}
